@@ -38,6 +38,9 @@ namespace phys {
 		Unit operator /= (const Unit& u);
 		Unit operator / (const Unit& u) const;
 
+		Unit operator + (const Unit& u) const { if (*this != u) throw Exception("Units are not the same (" + this->toString() + " & " + u.toString() + ")"); return u; }
+		Unit operator - (const Unit& u) const { if (*this != u) throw Exception("Units are not the same (" + this->toString() + " & " + u.toString() + ")"); return u; }
+
 		bool operator == (const Unit& u) const;
 		bool operator != (const Unit& u) const { return !(*this == u); }
 
@@ -66,12 +69,19 @@ namespace phys {
 		friend Quantity operator / (double d, const Quantity& q) { return Quantity(d) / q; }
 		Quantity operator / (double d) const { return Quantity(quantity / d, unit); }
 		Quantity operator / (const Quantity& q) const { return Quantity(quantity / q.quantity, unit / q.unit); }
-		Quantity operator /= (const Quantity& q) { quantity /= q.quantity; unit /= q.unit; }
+		Quantity operator /= (const Quantity& q) { quantity /= q.quantity; unit /= q.unit; return *this; }
 
-		Quantity operator + (const Quantity& q) const { if (unit != q.unit) throw Exception("Units are not the same"); return Quantity(quantity + q.quantity, q.unit); }
+		Quantity operator + (const Quantity& q) const { return Quantity(quantity + q.quantity, unit + q.unit); }
+		Quantity operator + (double d) const { return Quantity(quantity + d, unit); }
 
-		Quantity operator - (const Quantity& q) const { if (unit != q.unit) throw Exception("Units are not the same"); return Quantity(quantity - q.quantity, q.unit); }
+		Quantity operator - (const Quantity& q) const { return Quantity(quantity - q.quantity, q.unit - unit); }
+		friend Quantity operator - (double d, const Quantity& q) { return Quantity(d - q.quantity, q.unit); }
 		Quantity operator - () const { return Quantity(-quantity, unit); }
+
+		bool operator < (const Quantity& q) const { unit - q.unit; return quantity < q.quantity; }
+		inline bool operator > (const Quantity& q) const { q < *this; }
+		friend bool operator < (double d, const Quantity& q) { return d < q.quantity; }
+		friend bool operator > (double d, const Quantity& q) { return d > q.quantity; }
 
 		inline friend std::ostream& operator << (std::ostream& o, const Quantity& q) { return o << q.toString(); }
 	};
@@ -82,6 +92,8 @@ namespace phys {
 		Unit unit;
 
 		Vector(double x = 0, double y = 0, double z = 0, Unit unit = "") : x(x), y(y), z(z), unit(unit) {}
+		Vector(double angle, Quantity magnitude) : x(magnitude.quantity * cos(angle)), y(magnitude.quantity * sin(angle)), unit(magnitude.unit) {}
+		Vector(Quantity magnitude, double angle) : x(magnitude.quantity * cos(angle)), y(magnitude.quantity * sin(angle)), unit(magnitude.unit) {}
 
 		inline Quantity magnitude() const { return Quantity(sqrt(x*x + y * y + z * z), unit); }
 
@@ -92,6 +104,11 @@ namespace phys {
 
 		Vector operator / (double d) const { return Vector(x / d, y / d, z / d, unit); }
 		Vector operator / (const Quantity& q) const { return Vector(x / q.quantity, y / q.quantity, z / q.quantity, unit / q.unit); }
+
+		Vector operator - () const { return Vector(-x, -y, -z, unit); }
+
+		Vector operator + (const Vector& v) const { return Vector(x + v.x, y + v.y, z + v.z, unit + v.unit); }
+		Vector operator - (const Vector& v) const { return *this + -v; }
 
 		std::string toString() const { return "<" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + "> " + unit.toString(); }
 
@@ -106,21 +123,21 @@ private:\
 		return q;\
 	}\
 public:\
-	className(superClass q) : superClass(enforce(q)) {}\
+	className(superClass q) : superClass(enforce(q)) {}
 
 
 #define MAKE_SPECIALIZED_QUANTITY(className, unitName) \
 MAKE_SPECIALIZED_CLASS(className, Quantity, unitName) \
-	className(double d) : Quantity(d, unitName) {} \
-}
+		className(double d) : Quantity(d, unitName) {} \
+	}
 
 	MAKE_SPECIALIZED_QUANTITY(Mass, "kg");
 	MAKE_SPECIALIZED_QUANTITY(Charge, "C");
 
 #define MAKE_SPECIALIZED_VECTOR(className, unitName) \
 MAKE_SPECIALIZED_CLASS(className, Vector, unitName) \
-	className(double x = 0.0, double y = 0.0, double z = 0.0) : Vector(x, y, z, unitName) {} \
-};\
+		className(double x = 0.0, double y = 0.0, double z = 0.0) : Vector(x, y, z, unitName) {} \
+	};\
 MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 
 	MAKE_SPECIALIZED_VECTOR(Force, "N");
@@ -128,8 +145,8 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 	MAKE_SPECIALIZED_VECTOR(Acceleration, "m / s^2");
 	MAKE_SPECIALIZED_VECTOR(Velocity, "m / s");
 
-#undef MAKE_SPECIALIZED_QUANTITY
 #undef MAKE_SPECIALIZED_VECTOR
+#undef MAKE_SPECIALIZED_QUANTITY
 #undef MAKE_SPECIALIZED_CLASS
 
 	// Constant Quantities
@@ -140,7 +157,12 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 
 		const Charge e = Quantity(1.602e-19, "C");
 		const Mass electronMass = Quantity(9.11e-31, "kg");
+		const Acceleration g = { 0, -9.81, 0 };
 	}
+
+	inline double micro(double base)	{ return base * 0.000001; }
+	inline double nano(double base)		{ return base * 1e-9; }
+	inline double kilo(double base)		{ return base * 1000; }
 
 	Force elecForce(const Charge&, const Charge&, const Distance&);
 	ForceM elecForce(const Charge&, const Charge&, const DistanceM&);
@@ -148,4 +170,7 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 	Force gravForce(const Mass&, const Mass&, const Distance&);
 	ForceM gravForce(const Mass&, const Mass&, const DistanceM&);
 	VelocityM circularVelocity(const DistanceM& r, const AccelerationM& a);
-}
+
+	Quantity elecPot(const Charge&, const Charge&, const DistanceM&);
+	Quantity gravPot(const Mass&, const Mass&, const DistanceM&);
+};

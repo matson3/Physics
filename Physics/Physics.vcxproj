@@ -148,13 +148,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Exception.h" />
+    <ClInclude Include="HW.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="textAligner.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HW.cpp" />
     <ClCompile Include="HW1.cpp" />
+    <ClCompile Include="HW2.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="textAligner.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

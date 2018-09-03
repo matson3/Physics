@@ -6,21 +6,13 @@
 #include <exception>
 #include <iostream>
 #include <map>
-
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <sstream>
 
+#include "Exception.h"
+
 namespace phys {
-	class Exception : std::exception {
-	private:
-		std::string msg;
-
-	public:
-		Exception(std::string msg) : msg(msg) {}
-		const char* what() const throw() { return msg.c_str(); }
-	};
-
 	class Unit {
 	private:
 		std::map<const std::string, int> units;
@@ -92,7 +84,7 @@ namespace phys {
 		Unit unit;
 
 		Vector(double x = 0, double y = 0, double z = 0, Unit unit = "") : x(x), y(y), z(z), unit(unit) {}
-		Vector(double angle, Quantity magnitude) : x(magnitude.quantity * cos(angle)), y(magnitude.quantity * sin(angle)), unit(magnitude.unit) {}
+		Vector(double angle, Quantity magnitude) : x(magnitude.quantity * cos(angle)), y(magnitude.quantity * sin(angle)), z(0), unit(magnitude.unit) {}
 		Vector(Quantity magnitude, double angle) : x(magnitude.quantity * cos(angle)), y(magnitude.quantity * sin(angle)), unit(magnitude.unit) {}
 
 		inline Quantity magnitude() const { return Quantity(sqrt(x*x + y * y + z * z), unit); }
@@ -110,7 +102,7 @@ namespace phys {
 		Vector operator + (const Vector& v) const { return Vector(x + v.x, y + v.y, z + v.z, unit + v.unit); }
 		Vector operator - (const Vector& v) const { return *this + -v; }
 
-		std::string toString() const { return "<" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + "> " + unit.toString(); }
+		std::string toString() const;
 
 		friend std::ostream& operator << (std::ostream& o, Vector v) { return o << v.toString(); }
 	};
@@ -133,6 +125,8 @@ MAKE_SPECIALIZED_CLASS(className, Quantity, unitName) \
 
 	MAKE_SPECIALIZED_QUANTITY(Mass, "kg");
 	MAKE_SPECIALIZED_QUANTITY(Charge, "C");
+	MAKE_SPECIALIZED_QUANTITY(Energy, "J");
+	MAKE_SPECIALIZED_QUANTITY(Voltage, "V");
 
 #define MAKE_SPECIALIZED_VECTOR(className, unitName) \
 MAKE_SPECIALIZED_CLASS(className, Vector, unitName) \
@@ -157,20 +151,33 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 
 		const Charge e = Quantity(1.602e-19, "C");
 		const Mass electronMass = Quantity(9.11e-31, "kg");
-		const Acceleration g = { 0, -9.81, 0 };
+		const Acceleration g = { 0, -9.81 };
 	}
 
-	inline double micro(double base)	{ return base * 0.000001; }
-	inline double nano(double base)		{ return base * 1e-9; }
-	inline double kilo(double base)		{ return base * 1000; }
+	inline double micro(double micros)		{ return micros * 0.000001; }
+	inline double nano(double nanos)		{ return nanos * 1e-9; }
+	inline double kilo(double kilos)		{ return kilos * 1000; }
+
+	inline double toKilo(double base) { return base / 1000; }
 
 	Force elecForce(const Charge&, const Charge&, const Distance&);
 	ForceM elecForce(const Charge&, const Charge&, const DistanceM&);
 
+	Vector elecField(const Charge&, const Distance&);
+	Quantity elecField(const Charge&, const DistanceM&);
+
 	Force gravForce(const Mass&, const Mass&, const Distance&);
 	ForceM gravForce(const Mass&, const Mass&, const DistanceM&);
+
+	Force gravForce(const Mass&);
+	ForceM gravForceM(const Mass&);
+
 	VelocityM circularVelocity(const DistanceM& r, const AccelerationM& a);
 
-	Quantity elecPot(const Charge&, const Charge&, const DistanceM&);
+	Quantity elecPotEnergy(const Charge&, const Charge&, const DistanceM&);
 	Quantity gravPot(const Mass&, const Mass&, const DistanceM&);
+
+	Quantity elecPotential(const Charge&, const DistanceM&);
+
+	VelocityM velocity(const Energy& KE, const Mass& m);
 };

@@ -159,6 +159,7 @@
     <ClCompile Include="HW.cpp" />
     <ClCompile Include="HW1.cpp" />
     <ClCompile Include="HW2.cpp" />
+    <ClCompile Include="HW3.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="textAligner.cpp" />
     <ClCompile Include="stdafx.cpp">

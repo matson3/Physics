@@ -2,7 +2,6 @@
 
 #include "HW.h"
 
-//#define HW1
 #ifdef  HW1
 int main() {
 	return run(1, 10);

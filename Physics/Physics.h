@@ -124,9 +124,15 @@ MAKE_SPECIALIZED_CLASS(className, Quantity, unitName) \
 	}
 
 	MAKE_SPECIALIZED_QUANTITY(Mass, "kg");
+	MAKE_SPECIALIZED_QUANTITY(Time, "s");
+
 	MAKE_SPECIALIZED_QUANTITY(Charge, "C");
 	MAKE_SPECIALIZED_QUANTITY(Energy, "J");
+	MAKE_SPECIALIZED_QUANTITY(Work, "J");
 	MAKE_SPECIALIZED_QUANTITY(Voltage, "V");
+	MAKE_SPECIALIZED_QUANTITY(Ampage, "A");
+	MAKE_SPECIALIZED_QUANTITY(Resistance, "Ohms");
+	MAKE_SPECIALIZED_QUANTITY(Power, "W");
 
 #define MAKE_SPECIALIZED_VECTOR(className, unitName) \
 MAKE_SPECIALIZED_CLASS(className, Vector, unitName) \
@@ -154,8 +160,10 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 		const Acceleration g = { 0, -9.81 };
 	}
 
-	inline double micro(double micros)		{ return micros * 0.000001; }
 	inline double nano(double nanos)		{ return nanos * 1e-9; }
+	inline double micro(double micros)		{ return micros * 0.000001; }
+	inline double milli(double millis)		{ return millis / 1000; }
+	inline double centi(double centis)		{ return centis / 100; }
 	inline double kilo(double kilos)		{ return kilos * 1000; }
 
 	inline double toKilo(double base) { return base / 1000; }
@@ -180,4 +188,12 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 	Quantity elecPotential(const Charge&, const DistanceM&);
 
 	VelocityM velocity(const Energy& KE, const Mass& m);
+
+	Voltage voltage(const Ampage& i, const Resistance& r);
+	Voltage voltage(const Resistance& r, const Ampage& i);
+	Resistance resistance(const Voltage& v, const Ampage& i);
+	Resistance resistance(const Ampage& i, const Voltage& v);
+	Ampage current(const Resistance& r, const Voltage& v);
+	Ampage current(const Voltage& v, const Resistance& r);
+	Power power(const Ampage& i, const Voltage& r);
 };

@@ -12,6 +12,8 @@ using namespace phys::cnstQ;
 
 extern BetterOutstream cout;
 
+#define HW3
+
 #define model(x) do {\
 cout.setLeftMargin("");\
 cout << "Model: " << x << para;\

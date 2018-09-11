@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <string>
+
+#include "Exception.h"
 #include "Physics.h"
 #include "textAligner.h"
 
@@ -11,8 +13,6 @@ using namespace phys;
 using namespace phys::cnstQ;
 
 extern BetterOutstream cout;
-
-#define HW3
 
 #define model(x) do {\
 cout.setLeftMargin("");\
@@ -53,19 +53,37 @@ Q(F, "");
 A("");
 */
 
-void p1();
-void p2();
-void p3();
-void p4();
-void p5();
-void p6();
-void p7();
-void p8();
-void p9();
-void p10();
+class HW {
+private:
+	int maxProblem;
+	int hwNumber;
+
+public:
+	HW(int hwNumber, int maxHWproblems) {
+		if (hwNumber <= 0) throw Exception("hwNumber must be > 0");
+		if (maxHWproblems <= 0) throw Exception("maxHWproblems must be > 0");
+
+		this->hwNumber = hwNumber;
+		this->maxProblem = maxHWproblems;
+	}
+
+	virtual void p1() {}
+	virtual void p2() {}
+	virtual void p3() {}
+	virtual void p4() {}
+	virtual void p5() {}
+	virtual void p6() {}
+	virtual void p7() {}
+	virtual void p8() {}
+	virtual void p9() {}
+	virtual void p10() {}
+
+	int maxHWproblems() const { return maxProblem; }
+	int getHWnumber() const { return hwNumber; }
+};
 
 #define R(x) (M_PI * (x) / 180)
 
 #define D(x) std::cout << #x " = " << x << std::endl
 
-int run(int hwNumber, int maxHWProblems, bool exitAfterShowingProblem = false);
+int run(HW* hw, bool exitAfterShowingProblem = false);

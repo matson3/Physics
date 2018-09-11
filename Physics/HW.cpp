@@ -1,10 +1,14 @@
 #include "stdafx.h"
 
 #include "HW.h"
+#include "HW1.h"
 
-int run(int hwNumber, int maxHWProblems, bool exitAfterShowingProblem) {
-	if (maxHWProblems < 1) throw Exception("The maximum number of homework problems can't be nonpositive, ya primbo.");
+int main() {
+	HW* hw = &HW1();
+	return run(hw);
+}
 
+int run(HW* hw, bool exitAfterShowingProblem) {
 #define EXIT_CHK do {\
 if (std::cin.fail()) {\
 	std::string resp;\
@@ -14,23 +18,23 @@ if (std::cin.fail()) {\
 }\
 } while(0)
 
-	cout << "HW " << hwNumber << endl;
+	cout << "HW " << hw->getHWnumber() << endl;
 	while (1) {
-		int hw;
-		std::cin >> hw;
+		int problem;
+		std::cin >> problem;
 		EXIT_CHK;
-		while (std::cin.fail() || hw < 1 || hw > maxHWProblems) {
+		while (std::cin.fail() || problem < 1 || problem > hw->maxHWproblems()) {
 			std::cin.clear();
 			std::cin.ignore(INT_MAX, '\n');
-			cout << "Enter a HW number problem [1 - " << maxHWProblems << "]." << endl;
-			std::cin >> hw;
+			cout << "Enter a HW number problem [1 - " << hw->maxHWproblems() << "]." << endl;
+			std::cin >> problem;
 			EXIT_CHK;
 		}
 
-#define C(n) case n: p##n(); if (exitAfterShowingProblem) return 0; break
+#define C(n) case n: hw->p##n(); if (exitAfterShowingProblem) return 0; break
 
 		try {
-			switch (hw) {
+			switch (problem) {
 				C(1);
 				C(2);
 				C(3);

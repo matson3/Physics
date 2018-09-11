@@ -7,10 +7,9 @@
 #include "textAligner.h"
 
 class HW2 : public HW {
-private:
+public:
 	HW2() : HW(2, 10) {}
 
-public:
 	void p1() {
 		model("An electron is ejected into a horizontal uniform Electric field at a parallel horizontal velocity of v0.");
 

@@ -6,10 +6,9 @@
 #include "textAligner.h"
 
 class HW3 : public HW {
-private:
+public:
 	HW3() : HW(3, 5) {}
 
-public:
 	void p1() {
 		Time time = 9.6;
 		Quantity electrons = { 9.6e20, "electrons" };

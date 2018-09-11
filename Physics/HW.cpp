@@ -2,9 +2,11 @@
 
 #include "HW.h"
 #include "HW1.h"
+#include "HW2.h"
+#include "HW3.h"
 
 int main() {
-	HW* hw = &HW1();
+	HW* hw = &HW3();
 	return run(hw);
 }
 

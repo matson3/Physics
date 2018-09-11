@@ -7,7 +7,6 @@
 #include "textAligner.h"
 
 class HW1 : public HW {
-
 public:
 	HW1() : HW(1, 10) {}
 

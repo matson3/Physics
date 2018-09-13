@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 
-#include "Exception.h"
 #include "Physics.h"
 #include "textAligner.h"
 
@@ -19,14 +18,14 @@ cout.setLeftMargin("");\
 cout << "Model: " << x << para;\
 } while(0)
 
-#define Q(letter, x) do {\
+#define Q(letter, question) do {\
 cout.setLeftMargin("  ");\
-cout << #letter". " << x << endl;\
+cout << #letter". " << question << endl;\
 } while(0)
 
-#define A(x) do {\
+#define A(answer) do {\
 cout.setLeftMargin("     ");\
-cout << x << para;\
+cout << answer << para;\
 } while(0)
 
 #define Conceptual A("Conceptual, not mathematical")

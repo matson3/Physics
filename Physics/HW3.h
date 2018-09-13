@@ -77,4 +77,4 @@ public:
 	void p5() {
 		Conceptual;
 	}
-}
+};

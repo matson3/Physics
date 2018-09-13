@@ -71,7 +71,7 @@ namespace phys {
 		Quantity operator - () const { return Quantity(-quantity, unit); }
 
 		bool operator < (const Quantity& q) const { unit - q.unit; return quantity < q.quantity; }
-		inline bool operator > (const Quantity& q) const { q < *this; }
+		inline bool operator > (const Quantity& q) const { return q < *this; }
 		friend bool operator < (double d, const Quantity& q) { return d < q.quantity; }
 		friend bool operator > (double d, const Quantity& q) { return d > q.quantity; }
 
@@ -157,6 +157,7 @@ MAKE_SPECIALIZED_QUANTITY(className##M, unitName)
 
 		const Charge e = Quantity(1.602e-19, "C");
 		const Mass electronMass = Quantity(9.11e-31, "kg");
+		const Mass protonMass = Quantity(1.67e-27, "kg");
 		const Acceleration g = { 0, -9.81 };
 	}
 

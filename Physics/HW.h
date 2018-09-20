@@ -81,7 +81,7 @@ public:
 	int getHWnumber() const { return hwNumber; }
 };
 
-#define R(x) (M_PI * (x) / 180)
+#define R(degrees) (M_PI * (degrees) / 180)
 
 #define D(x) std::cout << #x " = " << x << std::endl
 

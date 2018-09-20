@@ -5,9 +5,10 @@
 #include "HW2.h"
 #include "HW3.h"
 #include "HW4.h"
+#include "HW5.h"
 
 int main() {
-	HW* hw = &HW4();
+	HW* hw = &HW5();
 	return run(hw);
 }
 

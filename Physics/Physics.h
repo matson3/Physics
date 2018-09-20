@@ -75,7 +75,7 @@ namespace phys {
 		friend bool operator < (double d, const Quantity& q) { return d < q.quantity; }
 		friend bool operator > (double d, const Quantity& q) { return d > q.quantity; }
 
-		inline friend std::ostream& operator << (std::ostream& o, const Quantity& q) { return o << q.toString(); }
+		inline friend std::ostream& operator << (std::ostream& o, const Quantity& q);
 	};
 
 	class Vector {

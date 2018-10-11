@@ -7,9 +7,11 @@
 #include "HW4.h"
 #include "HW5.h"
 #include "HW6.h"
+#include "HW7.h"
+#include "HW8.h"
 
 int main() {
-	HW* hw = &HW6();
+	HW* hw = &HW8();
 	return run(hw);
 }
 

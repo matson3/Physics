@@ -57,6 +57,9 @@
     <ClInclude Include="HW8.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HW9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

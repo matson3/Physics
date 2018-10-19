@@ -9,9 +9,10 @@
 #include "HW6.h"
 #include "HW7.h"
 #include "HW8.h"
+#include "HW9.h"
 
 int main() {
-	HW* hw = &HW8();
+	HW* hw = &HW9();
 	return run(hw);
 }
 
